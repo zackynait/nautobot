@@ -162,8 +162,9 @@ COPY --chown=nautobot:nautobot docs /source/docs
 COPY --chown=nautobot:nautobot nautobot /source/nautobot
 
 # Build the rendered docs, this ensures that the docs are in the final image.
-RUN mkdocs build --no-directory-urls && \
-    poetry build
+# RUN mkdocs build --no-directory-urls && \
+#     poetry build
+RUN poetry build
 
 ################################ Stage: dev (development environment for Nautobot core)
 
@@ -171,7 +172,7 @@ FROM python-dev-dependencies AS dev
 
 COPY --chown=nautobot:nautobot nautobot /source/nautobot
 
-COPY --from=build-nautobot --chown=nautobot:nautobot /source/nautobot/project-static/docs /source/nautobot/project-static/docs
+# COPY --from=build-nautobot --chown=nautobot:nautobot /source/nautobot/project-static/docs /source/nautobot/project-static/docs
 
 # Node is a platform-specific (ARM/x86) dependency and using fnm simplifies the process of
 # installing it. It also allows us to manage Node versions more easily with .node-version files
