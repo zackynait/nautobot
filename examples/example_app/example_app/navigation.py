@@ -18,7 +18,7 @@ menu_items = (
                 weight=100,
                 items=(
                     NavMenuItem(
-                        link="plugins:example_app:examplemodel_list",
+                        link="plugins:example_app:models",
                         name="Storage Models",
                         permissions=["example_app.view_examplemodel"],
                         buttons=(
@@ -31,13 +31,13 @@ menu_items = (
                         ),
                     ),
                     NavMenuItem(
-                        link="plugins:example_app:examplemodel_list",
+                        link="plugins:example_app:models",
                         name="Example Models filtered",
                         permissions=["example_app.view_examplemodel"],
                         query_params={"number": "100"},
                     ),
                     NavMenuItem(
-                        link="plugins:example_app:anotherexamplemodel_list",
+                        link="plugins:example_app:other-models",
                         name="Another Example Models",
                         permissions=["example_app.view_anotherexamplemodel"],
                         buttons=(
@@ -54,25 +54,75 @@ menu_items = (
         ),
     ),
     NavMenuTab(
-        name="Storage Menu",
+        name="Storage",
         weight=NavigationWeightChoices.CLOUD + 10,
         groups=(
             NavMenuGroup(
-                name="Storage Group 1",
+                name="Infrastructure",
                 weight=100,
                 items=(
                     NavMenuItem(
-                        link="plugins:example_app:examplemodel_list",
-                        name="Storage Models",
+                        link="plugins:example_app:models",
+                        name="Cluster",
                         permissions=["example_app.view_examplemodel"],
-                        buttons=(
-                            NavMenuAddButton(
-                                link="plugins:example_app:examplemodel_add",
-                                permissions=[
-                                    "example_app.add_examplemodel",
-                                ],
-                            ),
-                        ),
+                    ),
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="Server Storage",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                ),
+            ),
+            NavMenuGroup(
+                name="Storage Hardware",
+                weight=200,
+                items=(
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="Dischi",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="RAID",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="POOL",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                ),
+            ),
+            NavMenuGroup(
+                name="Storage Logical",
+                weight=300,
+                items=(
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="Volumi - LUN",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="Filesystem",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                ),
+            ),
+            NavMenuGroup(
+                name="File Sharing",
+                weight=400,
+                items=(
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="CIFS / SMB / NFS",
+                        permissions=["example_app.view_examplemodel"],
+                    ),
+                    NavMenuItem(
+                        link="plugins:example_app:models",
+                        name="FilePath",
+                        permissions=["example_app.view_examplemodel"],
                     ),
                 ),
             ),
@@ -88,7 +138,7 @@ menu_items = (
                 weight=150,
                 items=(
                     NavMenuItem(
-                        link="plugins:example_app:examplemodel_list",
+                        link="plugins:example_app:models",
                         name="Storage Models",
                         permissions=["example_app.view_examplemodel"],
                         buttons=(
