@@ -6,28 +6,28 @@ from nautobot.apps.tables import (
     ToggleColumn,
 )
 
-from example_app.models import AnotherExampleModel, ExampleModel
+from example_app.models import AnotherStorageModel, StorageModel
 
 
-class ExampleModelTable(BaseTable):
-    """Table for list view of `ExampleModel` objects."""
+class StorageModelTable(BaseTable):
+    """Table for list view of `StorageModel` objects."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn()
-    actions = ButtonsColumn(ExampleModel)
+    actions = ButtonsColumn(StorageModel)
 
     class Meta(BaseTable.Meta):
-        model = ExampleModel
+        model = StorageModel
         fields = ["pk", "name", "number"]
 
 
-class AnotherExampleModelTable(BaseTable):
-    """Table for list view of `AnotherExampleModel` objects."""
+class AnotherStorageModelTable(BaseTable):
+    """Table for list view of `AnotherStorageModel` objects."""
 
     pk = ToggleColumn()
     name = tables.LinkColumn()
-    actions = ButtonsColumn(AnotherExampleModel)
+    actions = ButtonsColumn(AnotherStorageModel)
 
     class Meta(BaseTable.Meta):
-        model = AnotherExampleModel
+        model = AnotherStorageModel
         fields = ["pk", "name", "number"]

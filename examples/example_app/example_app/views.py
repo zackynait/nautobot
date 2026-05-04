@@ -16,7 +16,7 @@ from nautobot.ipam.models import Prefix
 
 from example_app import filters, forms, tables
 from example_app.api import serializers
-from example_app.models import AnotherExampleModel, ExampleModel
+from example_app.models import AnotherStorageModel, StorageModel
 
 
 class CircuitDetailAppTabView(views.ObjectView):

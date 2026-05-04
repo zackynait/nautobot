@@ -11,9 +11,9 @@ from nautobot.apps.models import extras_features, OrganizationalModel
     "graphql",
     "webhooks",
 )
-class ExampleModel(OrganizationalModel):
-    name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, help_text="The name of this Example.", unique=True)
-    number = models.IntegerField(default=100, help_text="The number of this Example.")
+class StorageModel(OrganizationalModel):
+    name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, help_text="The name of this Storage.", unique=True)
+    number = models.IntegerField(default=100, help_text="The number of this Storage.")
 
     class Meta:
         ordering = ["name"]
@@ -29,7 +29,7 @@ class ExampleModel(OrganizationalModel):
     "webhooks",
     "relationships",  # Defined here to ensure no clobbering: https://github.com/nautobot/nautobot/issues/3592
 )
-class AnotherExampleModel(OrganizationalModel):
+class AnotherStorageModel(OrganizationalModel):
     name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, unique=True)
     number = models.IntegerField(default=100)
 
