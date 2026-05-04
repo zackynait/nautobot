@@ -1,33 +1,66 @@
 import django_tables2 as tables
 
+
+
 from nautobot.apps.tables import (
+
     BaseTable,
+
     ButtonsColumn,
+
     ToggleColumn,
+
 )
 
-from example_app.models import AnotherStorageModel, StorageModel
 
 
-class StorageModelTable(BaseTable):
-    """Table for list view of `StorageModel` objects."""
+from example_app.models import AnotherExampleModel, ExampleModel
+
+
+
+
+
+class ExampleModelTable(BaseTable):
+
+    """Table for list view of `ExampleModel` objects."""
+
+
 
     pk = ToggleColumn()
+
     name = tables.LinkColumn()
-    actions = ButtonsColumn(StorageModel)
+
+    actions = ButtonsColumn(ExampleModel)
+
+
 
     class Meta(BaseTable.Meta):
-        model = StorageModel
+
+        model = ExampleModel
+
         fields = ["pk", "name", "number"]
 
 
-class AnotherStorageModelTable(BaseTable):
-    """Table for list view of `AnotherStorageModel` objects."""
+
+
+
+class AnotherExampleModelTable(BaseTable):
+
+    """Table for list view of `AnotherExampleModel` objects."""
+
+
 
     pk = ToggleColumn()
+
     name = tables.LinkColumn()
-    actions = ButtonsColumn(AnotherStorageModel)
+
+    actions = ButtonsColumn(AnotherExampleModel)
+
+
 
     class Meta(BaseTable.Meta):
-        model = AnotherStorageModel
+
+        model = AnotherExampleModel
+
         fields = ["pk", "name", "number"]
+
