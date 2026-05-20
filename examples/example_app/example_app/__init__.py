@@ -10,11 +10,11 @@ from example_app.signals import nautobot_database_ready_callback
 
 class ExampleAppConfig(NautobotAppConfig):
     name = "example_app"
-    verbose_name = "Example Nautobot App"
+    verbose_name = "Storage Nautobot App"
     author = "Nautobot development team"
     author_email = "nautobot@example.com"
     version = __version__
-    description = "For testing purposes only"
+    description = "Storage management plugin"
     base_url = "example-app"
     min_version = "0.9"
     max_version = "9.0"
