@@ -132,9 +132,10 @@ class HomeView(AccessMixin, TemplateView):
         # Get selected tenant from GET parameter
         selected_tenant_id = request.GET.get("tenant")
         tenant_filter = {}
+        from nautobot.tenancy.models import Tenant
+        context["tenants"] = Tenant.objects.all()  # Add all tenants to context
         if selected_tenant_id:
             try:
-                from nautobot.tenancy.models import Tenant
                 tenant = Tenant.objects.get(id=selected_tenant_id)
                 tenant_filter = {"tenant": tenant}
                 context["selected_tenant"] = tenant

@@ -95,10 +95,7 @@ class ExampleAppConfigView(views.GenericView):
         return render(request, "example_app/config.html", {"form": form})
 
 
-class ExampleModelUIViewSet(
-    views.NautobotUIViewSet,
-    views.ObjectChangeLogViewMixin,
-):
+class ExampleModelUIViewSet(views.NautobotUIViewSet):
     bulk_update_form_class = forms.ExampleModelBulkEditForm
     filterset_class = filters.ExampleModelFilterSet
     filterset_form_class = forms.ExampleModelFilterForm

@@ -15,6 +15,23 @@
             <a href="https://docs.nautobot.com/projects/core/en/v{{ new_release.version }}/installation/upgrading/">Upgrade instructions</a>
         </div>
     {% endif %}
+    <!-- Tenant Selection Banner -->
+    <div class="alert alert-info">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col">
+                    <strong>Filter by Tenant:</strong>
+                    <a href="/" class="btn btn-sm {% if not selected_tenant %}btn-primary{% else %}btn-outline-primary{% endif %} ms-2">All Tenants</a>
+                    {% for tenant in tenants %}
+                        <a href="/?tenant={{ tenant.id }}" class="btn btn-sm {% if selected_tenant and selected_tenant.id == tenant.id %}btn-primary{% else %}btn-outline-primary{% endif %} ms-1">{{ tenant.name }}</a>
+                    {% endfor %}
+                    {% if selected_tenant %}
+                        <span class="ms-3 text-muted">Selected: <strong>{{ selected_tenant.name }}</strong></span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     <noscript>
         <style>
             #draggable-homepage-panels {

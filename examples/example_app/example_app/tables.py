@@ -30,7 +30,7 @@ class ExampleModelTable(BaseTable):
 
     name = tables.LinkColumn()
 
-    actions = ButtonsColumn(ExampleModel)
+    actions = ButtonsColumn(ExampleModel, buttons=("edit", "delete"))
 
 
 

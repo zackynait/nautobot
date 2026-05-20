@@ -186,23 +186,6 @@ class TenantDashboardView(LoginRequiredMixin, TemplateView):
         context["selected_tenant"] = selected_tenant
         context["tenants"] = Tenant.objects.all()
 
-        # DEBUG: Print registry structure to understand panel/item names
-        import pprint
-        print("DEBUG: Registry homepage_layout structure:")
-        print(f"Keys: {registry['homepage_layout'].keys()}")
-        print(f"Panels keys: {registry['homepage_layout']['panels'].keys()}")
-        for panel_key, panel_details in registry['homepage_layout']['panels'].items():
-            print(f"\nPanel key: {panel_key}")
-            print(f"Panel details keys: {panel_details.keys()}")
-            if 'items' in panel_details:
-                print(f"Panel items keys: {panel_details['items'].keys()}")
-                for item_key, item_details in panel_details['items'].items():
-                    print(f"  Item key: {item_key}")
-                    print(f"  Item details keys: {item_details.keys()}")
-                    # Print first item details for debugging
-                    break
-                break
-
         # Get homepage layout and filter counts - use the same structure as HomeView
         for panel_details in registry["homepage_layout"]["panels"].values():
             if panel_details.get("custom_template"):
