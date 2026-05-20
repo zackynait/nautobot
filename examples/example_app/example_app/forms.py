@@ -24,7 +24,7 @@ class ExampleModelForm(NautobotModelForm):
 
     class Meta:
         model = ExampleModel
-        fields = ["name", "number"]
+        fields = ["name", "number", "size_gb", "storage_type", "cluster_type", "disk_type", "nodes", "rpm"]
 
 
 class ExampleModelFilterForm(BootstrapMixin, forms.Form):
@@ -34,6 +34,21 @@ class ExampleModelFilterForm(BootstrapMixin, forms.Form):
     q = forms.CharField(required=False, label="Search")
     name = forms.CharField(max_length=CHARFIELD_MAX_LENGTH, required=False)
     number = forms.IntegerField(required=False)
+    storage_type = forms.ChoiceField(
+        choices=ExampleModel.STORAGE_TYPE_CHOICES,
+        required=False,
+        label="Storage Type"
+    )
+    cluster_type = forms.ChoiceField(
+        choices=ExampleModel.CLUSTER_TYPE_CHOICES,
+        required=False,
+        label="Cluster Type"
+    )
+    disk_type = forms.ChoiceField(
+        choices=ExampleModel.DISK_TYPE_CHOICES,
+        required=False,
+        label="Disk Type"
+    )
 
 
 # This is purposefully inheriting from `NautobotBulkEditForm` then TagsBulkEditFormMixin to validate that MRO supports both orders now.

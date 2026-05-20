@@ -12,16 +12,65 @@ from nautobot.apps.models import extras_features, OrganizationalModel
     "webhooks",
 )
 class ExampleModel(OrganizationalModel):
-    name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, help_text="The name of this Example.", unique=True)
-    number = models.IntegerField(default=100, help_text="The number of this Example.")
+    STORAGE_TYPE_CHOICES = [
+        ("ssd", "SSD"),
+        ("hdd", "HDD"),
+        ("nvme", "NVMe"),
+        ("san", "SAN"),
+        ("nas", "NAS"),
+    ]
+    
+    CLUSTER_TYPE_CHOICES = [
+        ("vsan", "vSAN"),
+        ("ceph", "Ceph"),
+        ("gluster", "Gluster"),
+        ("nfs", "NFS"),
+    ]
+    
+    DISK_TYPE_CHOICES = [
+        ("sas", "SAS"),
+        ("sata", "SATA"),
+        ("nvme", "NVMe"),
+        ("ssd", "SSD"),
+    ]
+
+    name = models.CharField(max_length=CHARFIELD_MAX_LENGTH, help_text="The name of this Storage.", unique=True)
+    number = models.IntegerField(default=100, help_text="The number of this Storage.")
+    size_gb = models.IntegerField(help_text="Size in GB", default=0)
+    storage_type = models.CharField(
+        max_length=50,
+        choices=STORAGE_TYPE_CHOICES,
+        default="ssd",
+        help_text="Type of storage"
+    )
+    cluster_type = models.CharField(
+        max_length=50,
+        choices=CLUSTER_TYPE_CHOICES,
+        blank=True,
+        null=True,
+        help_text="Cluster type"
+    )
+    disk_type = models.CharField(
+        max_length=50,
+        choices=DISK_TYPE_CHOICES,
+        blank=True,
+        null=True,
+        help_text="Disk type"
+    )
+    nodes = models.IntegerField(help_text="Number of nodes", default=1, blank=True, null=True)
+    rpm = models.IntegerField(help_text="RPM", default=7200, blank=True, null=True)
 
     class Meta:
         ordering = ["name"]
+        verbose_name = "Storage Model"
+        verbose_name_plural = "Storage Models"
 
     def __str__(self):
-        return f"{self.name} - {self.number}"
+        return f"{self.name} - {self.storage_type} ({self.size_gb}GB)"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self, api=False):
+        if api:
+            return None
         return f"/plugins/example-app/models/{self.pk}/"
 
 

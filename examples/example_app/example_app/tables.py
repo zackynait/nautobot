@@ -38,7 +38,7 @@ class ExampleModelTable(BaseTable):
 
         model = ExampleModel
 
-        fields = ["pk", "name", "number"]
+        fields = ["pk", "name", "storage_type", "size_gb", "cluster_type", "disk_type", "nodes", "rpm"]
 
 
 

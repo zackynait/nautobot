@@ -42,7 +42,7 @@ layout = (
         ),
     ),
     HomePagePanel(
-        name="Example App Custom Panel",
+        name="Storage Panel",
         custom_template="panel_example.html",
         custom_data={"example_data": get_example_data},
         permissions=["example_app.view_examplemodel"],
