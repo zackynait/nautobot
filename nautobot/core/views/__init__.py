@@ -129,6 +129,26 @@ class HomeView(AccessMixin, TemplateView):
             }
         )
 
+        # Get selected tenant from GET parameter
+        selected_tenant_id = request.GET.get("tenant")
+        tenant_filter = {}
+        if selected_tenant_id:
+            try:
+                from nautobot.tenancy.models import Tenant
+                tenant = Tenant.objects.get(id=selected_tenant_id)
+                tenant_filter = {"tenant": tenant}
+                context["selected_tenant"] = tenant
+                request.selected_tenant = tenant  # Set on request for custom_data functions
+            except (Tenant.DoesNotExist, ValueError):
+                # Try to get by name instead
+                try:
+                    tenant = Tenant.objects.get(name=selected_tenant_id)
+                    tenant_filter = {"tenant": tenant}
+                    context["selected_tenant"] = tenant
+                    request.selected_tenant = tenant
+                except Tenant.DoesNotExist:
+                    pass
+
         # Loop over homepage layout to collect all additional data and create custom panels.
         for panel_details in registry["homepage_layout"]["panels"].values():
             if panel_details.get("custom_template"):
@@ -141,7 +161,11 @@ class HomeView(AccessMixin, TemplateView):
 
                     elif item_details.get("model"):
                         # If there is a model attached collect object count.
-                        item_details["count"] = item_details["model"].objects.restrict(request.user, "view").count()
+                        queryset = item_details["model"].objects.restrict(request.user, "view")
+                        # Apply tenant filter if model has tenant field and tenant is selected
+                        if selected_tenant_id and hasattr(item_details["model"], "tenant"):
+                            queryset = queryset.filter(**tenant_filter)
+                        item_details["count"] = queryset.count()
 
                     elif item_details.get("items"):
                         # Collect count for grouped objects.
@@ -151,9 +175,11 @@ class HomeView(AccessMixin, TemplateView):
                                     request, context, group_item_details
                                 )
                             elif group_item_details.get("model"):
-                                group_item_details["count"] = (
-                                    group_item_details["model"].objects.restrict(request.user, "view").count()
-                                )
+                                queryset = group_item_details["model"].objects.restrict(request.user, "view")
+                                # Apply tenant filter if model has tenant field and tenant is selected
+                                if selected_tenant_id and hasattr(group_item_details["model"], "tenant"):
+                                    queryset = queryset.filter(**tenant_filter)
+                                group_item_details["count"] = queryset.count()
 
         return self.render_to_response(context)
 

@@ -1,6 +1,7 @@
 from nautobot.core.apps import HomePageItem, HomePagePanel
 from nautobot.tenancy.models import Tenant
 
+
 layout = (
     HomePagePanel(
         name="Organization",

@@ -22,7 +22,7 @@ layout = (
                 name="Example Models",
                 model=ExampleModel,
                 weight=150,
-                link="plugins:example_app:examplemodel_list",
+                link="plugins:example_app:examplemodel_unique_list",
                 description="List Example App models.",
                 permissions=["example_app.view_examplemodel"],
             ),

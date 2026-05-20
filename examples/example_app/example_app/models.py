@@ -21,6 +21,9 @@ class ExampleModel(OrganizationalModel):
     def __str__(self):
         return f"{self.name} - {self.number}"
 
+    def get_absolute_url(self):
+        return f"/plugins/example-app/models/{self.pk}/"
+
 
 @extras_features(
     "custom_validators",

@@ -1,3 +1,8 @@
+import os
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template import Template, TemplateDoesNotExist
+from django.template.context import RequestContext
 from django_tables2 import RequestConfig
 
 from nautobot.circuits.models import Circuit
@@ -126,3 +131,109 @@ class TenantUIViewSet(NautobotUIViewSet):
             ]
         }
     )
+
+
+#
+# Tenant Dashboard
+#
+
+
+from django.views.generic import TemplateView
+from nautobot.core.apps import registry
+
+
+class TenantDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "tenancy/tenant_dashboard.html"
+
+    def render_additional_content(self, request, context, details):
+        # Collect all custom data using callback functions.
+        for key, data in details.get("custom_data", {}).items():
+            if callable(data):
+                context[key] = data(request)
+            else:
+                context[key] = data
+
+        # Create standalone template
+        path = f"{details['template_path']}{details['custom_template']}"
+        if os.path.isfile(path):
+            with open(path, "r") as f:
+                html = f.read()
+        else:
+            raise TemplateDoesNotExist(path)
+
+        template = Template(html)
+
+        additional_context = RequestContext(request, context)
+        return template.render(additional_context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tenant_id = self.request.GET.get("tenant")
+        selected_tenant = None
+        tenant_filter = {}
+
+        if tenant_id:
+            try:
+                selected_tenant = Tenant.objects.get(id=tenant_id)
+                tenant_filter = {"tenant": selected_tenant}
+            except (Tenant.DoesNotExist, ValueError):
+                try:
+                    selected_tenant = Tenant.objects.get(name=tenant_id)
+                    tenant_filter = {"tenant": selected_tenant}
+                except Tenant.DoesNotExist:
+                    pass
+
+        context["selected_tenant"] = selected_tenant
+        context["tenants"] = Tenant.objects.all()
+
+        # DEBUG: Print registry structure to understand panel/item names
+        import pprint
+        print("DEBUG: Registry homepage_layout structure:")
+        print(f"Keys: {registry['homepage_layout'].keys()}")
+        print(f"Panels keys: {registry['homepage_layout']['panels'].keys()}")
+        for panel_key, panel_details in registry['homepage_layout']['panels'].items():
+            print(f"\nPanel key: {panel_key}")
+            print(f"Panel details keys: {panel_details.keys()}")
+            if 'items' in panel_details:
+                print(f"Panel items keys: {panel_details['items'].keys()}")
+                for item_key, item_details in panel_details['items'].items():
+                    print(f"  Item key: {item_key}")
+                    print(f"  Item details keys: {item_details.keys()}")
+                    # Print first item details for debugging
+                    break
+                break
+
+        # Get homepage layout and filter counts - use the same structure as HomeView
+        for panel_details in registry["homepage_layout"]["panels"].values():
+            if panel_details.get("custom_template"):
+                panel_details["rendered_html"] = self.render_additional_content(self.request, context, panel_details)
+
+            else:
+                for item_details in panel_details["items"].values():
+                    if item_details.get("custom_template"):
+                        item_details["rendered_html"] = self.render_additional_content(self.request, context, item_details)
+
+                    elif item_details.get("model"):
+                        # If there is a model attached collect object count.
+                        queryset = item_details["model"].objects.restrict(self.request.user, "view")
+                        # Apply tenant filter if model has tenant field and tenant is selected
+                        if tenant_filter and hasattr(item_details["model"], "tenant"):
+                            queryset = queryset.filter(**tenant_filter)
+                        item_details["count"] = queryset.count()
+
+                    elif item_details.get("items"):
+                        # Collect count for grouped objects.
+                        for group_item_details in item_details["items"].values():
+                            if group_item_details.get("custom_template"):
+                                group_item_details["rendered_html"] = self.render_additional_content(
+                                    self.request, context, group_item_details
+                                )
+                            elif group_item_details.get("model"):
+                                queryset = group_item_details["model"].objects.restrict(self.request.user, "view")
+                                # Apply tenant filter if model has tenant field and tenant is selected
+                                if tenant_filter and hasattr(group_item_details["model"], "tenant"):
+                                    queryset = queryset.filter(**tenant_filter)
+                                group_item_details["count"] = queryset.count()
+
+        context["homepage_layout"] = registry["homepage_layout"]
+        return context
